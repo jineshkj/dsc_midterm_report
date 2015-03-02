@@ -30,7 +30,7 @@ Apart from the above mentioned features, we would also attempt to have some anal
 
 
 \section{Software Development}
-For the ease of development and testing, the primary software development platform has been chosen as Ruby/Linux. Ruby and Linux are one of the most versatile and advanced software development platforms available today and is poised to remain so in future as well. Although such is the case, I would like to see McFS working well on Mac and Windows platforms as well in near future. The software development efforts can be broadly divided into two modules:
+For the ease of development and testing, the primary software development platform has been chosen as Ruby/Linux. Ruby\cite{site:rubylang} and Linux are one of the most versatile and advanced software development platforms available today and is poised to remain so in future as well. Although such is the case, I would like to see McFS working well on Mac and Windows platforms as well in near future. The software development efforts can be broadly divided into two modules:
 
 \begin{itemize}
 	\item \textbf{mcfs} command line tool that will be used on user's desktop to mount the McFS filesystem
@@ -40,7 +40,7 @@ For the ease of development and testing, the primary software development platfo
 More details about the above modules are provided below.
 
 \subsection{mcfs CLI tool}
-The mcfs command line tool is being developed using Ruby programming language and published as a Ruby Gem. Publishing software as a Gem enables its easy dependency tracking and installation. FUSE (Filesystem in Userspace) sub-system which is available natively on Linux and Mac operating systems would be used to mount the multi-cloud filesystem on desktop machines. Following ruby gems are being either used currently or investigated for future inclusion in the software:
+The mcfs command line tool is being developed using Ruby programming language and published as a Ruby Gem\cite{site:rubygems}. Publishing software as a Gem enables its easy dependency tracking and installation. FUSE (Filesystem in Userspace)\cite{site:fuselinux} \cite{site:osxfuse} sub-system which is available natively on Linux and Mac operating systems would be used to mount the multi-cloud filesystem on desktop machines. Following ruby gems are being either used currently or investigated for future inclusion in the software:
 
 \begin{itemize}
 	\item \textbf{rfusefs} enables implementation of file systems in userspace using the Linux FUSE api. At present this gem seem to have some issues with the OSXFuse API and therefore would need a revisit when Mac OS support is being worked on.
@@ -57,19 +57,19 @@ Apart from the above, the following gems are also being considered for miscellan
 \end{itemize}
 
 \subsection{McFS online service}
-For the purpose of setting up an online web service, I have registered the \emph{bitmanor.net} domain with Google Domains and bought small Linux hosting from Linode with a montly data transfer limit of 2 TB. Since we've chosen Ruby as the primary programming language for the CLI, it makes even more sense to go for a Ruby-based web framework like Ruby on Rails or Sinatra. Although it is not yet decided on the Javascript framework that need to be used, technologies like Coffeescript and Dart/Polymer are being extensively researched upon at this point of time.
+For the purpose of setting up an online web service, I have registered the \emph{bitmanor.net} domain with Google Domains and bought small Linux hosting from Linode with a montly data transfer limit of 2 TB. Since we've chosen Ruby as the primary programming language for the CLI, it makes even more sense to go for a Ruby-based web framework like Ruby on Rails\cite{site:rubyonrails} or Sinatra\cite{sinatra}. Although it is not yet decided on the Javascript framework that need to be used, technologies like Coffeescript\cite{site:coffeescript} and Dart/Polymer\cite{site:dartlang} are being extensively researched upon at this point of time.
 
-The website would support only HTTPS based communication in order to ensure proper security and privacy for user data in transit. An interesting project called \emph{Let's Encrypt} is being considered as an alternative solution to the use of expensive SSL certificates. As far as the web server itself is concerned, Phusion and Puma are the top contenders.
+The website would support only HTTPS based communication in order to ensure proper security and privacy for user data in transit. An interesting project called \emph{Let's Encrypt}\cite{site:letsencrypt} is being considered as an alternative solution to the use of expensive SSL certificates. As far as the web server itself is concerned, Phusion Passenger\cite{site:phusion} and Puma\cite{site:puma} are the top contenders.
 
 \subsection{Building}
-Since Ruby is an interpreted programming language, there is no need to have the usual compile and link stages before running the modified software. Even then, we might still want to automate unit testing and packaging of the software. For all such activities, the default build tool \emph{rake} would be used.
+Since Ruby is an interpreted programming language, there is no need to have the usual compile and link stages before running the modified software. Even then, we might still want to automate unit testing and packaging of the software. For all such activities, the default Ruby build tool \emph{rake} would be used.
 
 \subsection{Testing}
 
-Wherever feasible, unit testing would be performed either using RSpec or Test::Unit as they are the most commonly used unit testing frameworks for Ruby programs. A continuous integration service like Travis is also being considered.
+Wherever feasible, unit testing would be performed either using RSpec or Test::Unit as they are the most commonly used unit testing frameworks for Ruby programs. A continuous integration service like Travis\cite{site:travisci} is also being considered.
 
 \subsection{Release}
-Although the installation of the mcfs gem is easy with the \emph{gem} command line tool provided by an installed Ruby, I believe \emph{Traveling Ruby} would be a better way to ensure correct Ruby version and hassel free portability.
+Although the installation of the mcfs gem is easy with the \emph{gem} command line tool provided by an installed Ruby, I believe \emph{Traveling Ruby}\cite{site:travelingruby} would be a better way to ensure correct Ruby version and hassel free portability.
 
 \subsection{Portability}
 At present, we aim the software to run correctly on the following platforms:
@@ -109,7 +109,9 @@ While spanning files across multiple storage, it need to be split into multiple 
 \section{File Sharing}
 A feature that is being requested by well wishers of the project is to be able to securely share files with their friends. This could mean a future need to integrate with social networking sites like Facebook, Twitter, Google+, etc. Since this feature require a lot of effort, it might be implemented only after the project submission.
 
-\section*{Acknowledgment}
-normal citation~\cite{Byme:curtmola10} 
+\section*{Similar Work}
 
-
+\begin{itemize}
+	\item SPANStor \cite{paper:spanstor} is a multi-cloud storage technology for cost-effective geo-replicated storage primarily meant for enterprises
+	\item MultCloud \cite{site:multcloud} is an online web portal which can be used to access all the major online cloud storage accounts of a user
+\end{itemize}
