@@ -18,10 +18,10 @@ ps2pdf "$filename".ps "$filename".pdf
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # Ubuntu
-    evince $filename.pdf &
+    evince $filename.pdf
 else 
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac OSX
-    open -a Preview $filename.pdf &
+    open -a Preview $filename.pdf
   fi
 fi

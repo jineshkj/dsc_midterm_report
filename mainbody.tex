@@ -1,11 +1,113 @@
 \begin{abstract}
-%\boldmath
-The abstract goes here.
+Internet users are exposed to some form of could service each day even when they are just checking their email or performing some web searches. Although it has been made possible to access multiple email accounts on an end-user's device using special email client applications, there has been little support to easily access the cloud storage associated with their email accounts. For example, even though a Gmail user is given access to gigabytes of free online cloud storage, there has been no easy or straightforward way to access this storage other then through Google's online Google Drive service. The situation is not very different for Microsoft Outlook service either. There also exists no open source software that can aggregate the multiple cloud storage accounts into one in an easy manner.
+
+In this project we aim to develop a portable open-source software users could easily install on their devices that can access all of their available online storage in a seamless fashion. Users would also be able to have similar features accessible over a web portal.
 \end{abstract}
 
 
 \section{Introduction}
-Main text body goes here
+A brief survey conducted among a few regular internet users known to me has revealed that the most popular personal cloud storage services used are Dropbox, Google Drive and Microsoft One Drive. All these cloud services also offer some sort of free cloud storage for every user account which can easily be access using a REST (Representational State Transfer) based API with OAuth authentication. Therefore during the course of implementing this project, we aim to provide support for these three services. Apart from providing a central location for an end-user to access these accounts, we would also create a file system that we call as \emph{McFS} that can combine different storage accounts into a unified and distributed one.
+
+\section{Main Features}
+Following are the main features that we intend to complete as part of this project:
+\begin{itemize}
+	\item A command-line tool named \emph{mcfs} that can be used on a desktop machine to mount the McFS file system
+	\item An online web service where the user could create an account to manage his cloud storage accounts as well as McFS shares
+	\item Support for at least two of Dropbox, Google Drive, Microsoft One Drive services
+	\item McFS shares spanning across multiple cloud storage accounts
+	\item Compression of stored files in order to use the cloud services more efficiently
+	\item Local caching of hot data in order to reduce network access
+	\item Ranking and tiering of cloud services based on heuristic performance measurements
+\end{itemize}
+
+Apart from the above mentioned features, we would also attempt to have some analysis and possibly a basic prototyping of the following features as well:
+\begin{itemize}
+	\item Redundancy of data in order to have fault tolerance
+	\item Analysis on tail latency and their avoidance techniques
+	\item Possibiliy of having McFS as a service similar to current cloud services in order to enable its use in a commercial setup
+	\item McFS as a peer-to-peer file sharing service in order to bolster internet decentralization and strengthen net neutrality.
+\end{itemize}
+
+
+\section{Software Development}
+For the ease of development and testing, the primary software development platform has been chosen as Ruby/Linux. Ruby and Linux are one of the most versatile and advanced software development platforms available today and is poised to remain so in future as well. Although such is the case, I would like to see McFS working well on Mac and Windows platforms as well in near future. The software development efforts can be broadly divided into two modules:
+
+\begin{itemize}
+	\item \textbf{mcfs} command line tool that will be used on user's desktop to mount the McFS filesystem
+	\item A website and web service for the online user account to configure McFS service
+\end{itemize}
+
+More details about the above modules are provided below.
+
+\subsection{mcfs CLI tool}
+The mcfs command line tool is being developed using Ruby programming language and published as a Ruby Gem. Publishing software as a Gem enables its easy dependency tracking and installation. FUSE (Filesystem in Userspace) sub-system which is available natively on Linux and Mac operating systems would be used to mount the multi-cloud filesystem on desktop machines. Following ruby gems are being either used currently or investigated for future inclusion in the software:
+
+\begin{itemize}
+	\item \textbf{rfusefs} enables implementation of file systems in userspace using the Linux FUSE api. At present this gem seem to have some issues with the OSXFuse API and therefore would need a revisit when Mac OS support is being worked on.
+	\item \textbf{dropbox-sdk} is the official gem provided by Dropbox for accessing and managing Dropbox accounts.
+	\item \textbf{google\_drive} similarly provides access to Google Drive but does not look like an official release.
+	\item \textbf{skydrive} seem to be an actively developed unofficial gem for accessing Microsoft's online drive.
+\end{itemize}
+
+Apart from the above, the following gems are also being considered for miscellaneous features:
+
+\begin{itemize}
+	\item \textbf{commander} for advanced command line option processing.
+	\item \textbf{sidekiq} or \textbf{celluloid} for efficient concurrent processing
+\end{itemize}
+
+\subsection{McFS online service}
+For the purpose of setting up an online web service, I have registered the \emph{bitmanor.net} domain with Google Domains and bought small Linux hosting from Linode with a montly data transfer limit of 2 TB. Since we've chosen Ruby as the primary programming language for the CLI, it makes even more sense to go for a Ruby-based web framework like Ruby on Rails or Sinatra. Although it is not yet decided on the Javascript framework that need to be used, technologies like Coffeescript and Dart/Polymer are being extensively researched upon at this point of time.
+
+The website would support only HTTPS based communication in order to ensure proper security and privacy for user data in transit. An interesting project called \emph{Let's Encrypt} is being considered as an alternative solution to the use of expensive SSL certificates. As far as the web server itself is concerned, Phusion and Puma are the top contenders.
+
+\subsection{Building}
+Since Ruby is an interpreted programming language, there is no need to have the usual compile and link stages before running the modified software. Even then, we might still want to automate unit testing and packaging of the software. For all such activities, the default build tool \emph{rake} would be used.
+
+\subsection{Testing}
+
+Wherever feasible, unit testing would be performed either using RSpec or Test::Unit as they are the most commonly used unit testing frameworks for Ruby programs. A continuous integration service like Travis is also being considered.
+
+\subsection{Release}
+Although the installation of the mcfs gem is easy with the \emph{gem} command line tool provided by an installed Ruby, I believe \emph{Traveling Ruby} would be a better way to ensure correct Ruby version and hassel free portability.
+
+\subsection{Portability}
+At present, we aim the software to run correctly on the following platforms:
+
+\begin{itemize}
+	\item MRI >= 1.9.3 on Ubuntu Linux >= 12.04
+	\item MRI >= 1.9.3 on Arch Linux (latest)
+\end{itemize}
+
+In future, we would like the software to run also on Rubinius and JRuby Ruby VMs with additional platform support for Mac OS and Windows (>= 7).
+
+\subsection{Project Hosting}
+The project is presently hosted under the user account \emph{jineshkj} within the \emph{McFS} repository although it will soon be moved to a separate project user account.
+
+\section{File Compression}
+Four algorithms that are being considered for file compression are LZMA, BZ, GZ and Zip in order of their preference. Even though LZMA and Bzip are found to provide the best compression, Zip and Gzip are light on CPU.
+
+We probably need to develop and algorithm to use different algorithm on each file based on the type of data contained in it and frequency of its access. For example, one compression algorithm might work better on binary files than others. If we are able to either determine the file type in advance or test different algorithms on the file itself, we will be able to choose the optimal algorithm for every file stored in the cloud.
+
+\section{Local Caching}
+When the user mounts an McFS account/share on the desktop, it would be best for performance to cache frequently and recently used data blocks in the local system itself. There would be a user configurable option that the mcfs CLI tool could read while mounting the filesystem that determines the amount and location of local storage where files will be cached.
+
+\section{Service Tiering and Hot Data}
+There will be a mechanism within the mcfs software to use heuristics to determine the performance of each connected account and use it to rank the accounts to partition them into different tiers. Hot data items which are determined by their access frequency is moved to a higher tier at regular intervals.
+ 
+\section{Security and Privacy}
+I take security and privacy very seriously. Apart from the HTTPS method used to access McFS online service, I intend to add the following security features:
+
+\begin{itemize}
+	\item Data stored as part of an McFS share are encrypted before being sent to a third-party data storage provider.
+	\item Gems released as part of the project would be signed before release so that it can verified before installation.
+\end{itemize}
+
+\section{Chunk Size}
+While spanning files across multiple storage, it need to be split into multiple chunks. Although the chunk size if presently kept as 4 KB, it could be increased to 16 KB or 128 KB in order to improve overall throughput by reduced TCP handshakes.
+
+\section{File Sharing}
+A feature that is being requested by well wishers of the project is to be able to securely share files with their friends. This could mean a future need to integrate with social networking sites like Facebook, Twitter, Google+, etc. Since this feature require a lot of effort, it might be implemented only after the project submission.
 
 \section*{Acknowledgment}
 normal citation~\cite{Byme:curtmola10} 
