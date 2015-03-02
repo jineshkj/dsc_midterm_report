@@ -28,10 +28,9 @@ Here is a good tutorial for writing latex [[link](http://www.maths.tcd.ie/~dwilk
 3. Compile latex (to pdf)
 ---
 
+Ensure Ruby is installed on the machine.
+
 ```bash
-./tt_sh/latex.sh latex.
-#Or 
-./tt_sh/latex.sh latex
+rake clean
+rake
 ```
-
-
